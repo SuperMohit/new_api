@@ -1,6 +1,6 @@
 from typing import Union
 from fastapi import FastAPI
-from news_cron import fetch_and_save
+from api.news_cron import fetch_and_save
 
 app = FastAPI()
 
