@@ -3,6 +3,8 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import requests
 import json
+
+from prompt.gpt_api import generate_questions
   
 
 def get_api_key():  
@@ -52,6 +54,10 @@ def fetch_and_save():
                 # Define a new document reference in Firestore with a generated ID
                 doc_ref = db.collection('news_ai').document()
                 # Add the set operation for the document to the batch
+                content = article['content']
+                ##TODOscale out later
+                questions = generate_questions(content)
+                print(questions)
                 batch.set(doc_ref, {
                     'content': article['content'] or "content",
                     'description': article['description'] or "description",
@@ -59,12 +65,11 @@ def fetch_and_save():
                     'pub_date': article['pubDate'] or "pub",
                     'src_link': article['link'] or "link",
                     'title': article['title'] or "title",
-                    'category': article['category'] 
+                    'category': article['category'],
+                    'questions': questions
                 })
-
             # Commit the batch write
             batch.commit()
-
         else:
             # Print an error message if the request was not successful
             print(f"Error: {response.status_code} - {response.reason}")
