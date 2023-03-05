@@ -7,7 +7,7 @@ import json
 
 def get_api_key():  
     # Opening JSON file
-    with open('cred.json') as f:
+    with open('api/creds/cred.json') as f:
         data = json.load(f)
 
     api_key = data['apikey']
@@ -19,7 +19,7 @@ def get_api_key():
 def fetch_and_save():
     api_key = get_api_key()
     # Initialize the Firebase app with your service account credentials
-    cred = credentials.Certificate('newsai-379605-firebase-adminsdk-yoo87-5732267602.json')
+    cred = credentials.Certificate('api/creds/newsai-379605-firebase-adminsdk-yoo87-5732267602.json')
     firebase_admin.initialize_app(cred)
 
     # Get a Firestore client instance
@@ -53,13 +53,13 @@ def fetch_and_save():
                 doc_ref = db.collection('news_ai').document()
                 # Add the set operation for the document to the batch
                 batch.set(doc_ref, {
-                    'content': article['content'],
-                    'description': article['description'],
-                    'img_url': article['image_url'],
-                    'pub_date': article['pubDate'],
-                    'src_link': article['link'],
-                    'title': article['title'],
-                    'category': article['category']
+                    'content': article['content'] or "content",
+                    'description': article['description'] or "description",
+                    'img_url': article['image_url'] or "url",
+                    'pub_date': article['pubDate'] or "pub",
+                    'src_link': article['link'] or "link",
+                    'title': article['title'] or "title",
+                    'category': article['category'] 
                 })
 
             # Commit the batch write
